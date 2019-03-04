@@ -5,7 +5,7 @@ import { EightBallComponent } from './eight-ball.component';
 
 const routes: Routes = [
   {
-    path: 'eight-ball',
+    path: '',
     component: EightBallComponent
   }
 ];

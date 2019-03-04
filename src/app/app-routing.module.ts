@@ -4,16 +4,21 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'connect-n'
-  },
-  {
-    path: 'connect-n',
-    loadChildren: './connect-n/connect-n.module#ConnectNModule'
-  },
-  {
-    path: 'eight-ball',
-    loadChildren: './eight-ball/eight-ball.module#EightBallModule'
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'connect-n'
+      },
+      {
+        path: 'connect-n',
+        loadChildren: './connect-n/connect-n.module#ConnectNModule'
+      },
+      {
+        path: 'eight-ball',
+        loadChildren: './eight-ball/eight-ball.module#EightBallModule'
+      }
+    ]
   }
 ];
 
