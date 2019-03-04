@@ -29,6 +29,7 @@ export class EightBallComponent implements OnInit {
     'Very doubtful.'
   ];
   fortune = '';
+  shaking = false;
 
   constructor() {}
 
@@ -39,10 +40,16 @@ export class EightBallComponent implements OnInit {
   }
 
   shake() {
+    this.fortune = '';
     const rand = Math.random();
     const n = this.fortunes.length;
-    this.fortune = this.fortunes.find((x, i) =>
+    const fortune = this.fortunes.find((x, i) =>
       this.inRange(rand, i / n, (i + 1) / n)
     );
+    this.shaking = true;
+    setTimeout(() => {
+      this.shaking = false;
+      this.fortune = fortune;
+    }, 2000);
   }
 }
