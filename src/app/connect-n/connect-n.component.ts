@@ -9,8 +9,13 @@ import { ConnectNGameboard } from './connect-n.model';
 })
 export class ConnectNComponent implements OnInit {
   gameboard = new ConnectNGameboard(6, 7, 4);
+  showSettings = true;
 
   constructor() {}
+
+  get player(): string {
+    return this.gameboard.player;
+  }
 
   get rows(): string[][] {
     return this.gameboard.board;

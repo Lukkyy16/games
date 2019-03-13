@@ -1,3 +1,21 @@
+<h2>Player {{ player }}, it's your turn!</h2>
+<button
+  mat-raised-button
+  color="primary"
+  (click)="showSettings = !showSettings"
+>
+  Show Settings
+</button>
+<mat-card *ngIf="showSettings">
+  <form>
+    <mat-form-field>
+      <input matInput placeholder="Player 1 Name" />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Player 2 Name" />
+    </mat-form-field>
+  </form>
+</mat-card>
 <div id="board">
   <div *ngFor="let row of rows; let i = index" class="row">
     <span
