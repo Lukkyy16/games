@@ -1,12 +1,23 @@
 export class ConnectNGameboard {
-  board: string[][];
-  player = '';
-  totalRows = 0;
-  totalColumns = 0;
+  player = 'O';
   count = 0;
-  inRow = 0;
+  board: string[][] = [];
 
-  constructor() {}
+  constructor(
+    public totalRows: number,
+    public totalColumns: number,
+    public inRow: number
+  ) {
+    for (let r = 0; r < this.totalRows; r++) {
+      this.board.push(new Array(this.totalColumns));
+    }
+    for (let r = 0; r < this.totalRows; r++) {
+      for (let c = 0; c < this.totalColumns; c++) {
+        this.board[r][c] = '-';
+      }
+    }
+    console.dir(this.board);
+  }
 
   check(r: number, c: number): boolean {
     return this.board[r][c] === '-'
@@ -30,15 +41,43 @@ export class ConnectNGameboard {
   }
 
   countDown(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = r;
+
+    while (i < this.totalRows - 1) {
+      if (this.board[i + 1][c] !== this.board[r][c]) {
+        break;
+      }
+      count++;
+      i++;
+    }
+    return count;
   }
 
   countLeft(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = c;
+    while (i > 0) {
+      if (this.board[r][i - 1] !== this.board[r][c]) {
+        break;
+      }
+      count++;
+      i -= 1;
+    }
+    return count;
   }
 
   countRight(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = c;
+    while (i < this.totalColumns - 1) {
+      if (this.board[r][i + 1] !== this.board[r][c]) {
+        break;
+      }
+      count++;
+      i++;
+    }
+    return count;
   }
 
   countUp(r: number, c: number): number {
@@ -55,19 +94,63 @@ export class ConnectNGameboard {
   }
 
   countDownRight(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = r;
+    let j = c;
+    while (i < this.totalRows - 1 && j < this.totalColumns - 1) {
+      if (this.board[i + 1][j + 1] !== this.board[r][c]) {
+        break;
+      }
+      i++;
+      j++;
+      count++;
+    }
+    return count;
   }
 
   countDownLeft(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = r;
+    let j = c;
+    while (i < this.totalRows - 1 && j > 0) {
+      if (this.board[i + 1][j - 1] !== this.board[r][c]) {
+        break;
+      }
+      j -= 1;
+      i++;
+      count++;
+    }
+    return count;
   }
 
   countUpRight(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = r;
+    let j = c;
+    while (i > 0 && j < this.totalColumns - 1) {
+      if (this.board[i - 1][j + 1] !== this.board[r][c]) {
+        break;
+      }
+      i -= 1;
+      j++;
+      count++;
+    }
+    return count;
   }
 
   countUpLeft(r: number, c: number): number {
-    return 0;
+    let count = 0;
+    let i = r;
+    let j = c;
+    while (i > 0 && j > 0) {
+      if (this.board[i - 1][j - 1] !== this.board[r][c]) {
+        break;
+      }
+      i -= 1;
+      j -= 1;
+      count++;
+    }
+    return count;
   }
 
   getIndex(r: number, c: number) {

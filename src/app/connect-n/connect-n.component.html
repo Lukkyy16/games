@@ -1,0 +1,12 @@
+<div id="board">
+  <div *ngFor="let row of rows; let i = index" class="row">
+    <span
+      *ngFor="let col of row; let j = index"
+      class="circle"
+      [class.empty]="col === '-'"
+      [class.red]="col === 'X'"
+      [class.yellow]="col === 'O'"
+      (click)="click(i, j)"
+    ></span>
+  </div>
+</div>

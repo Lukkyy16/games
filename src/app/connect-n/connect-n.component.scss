@@ -1,0 +1,27 @@
+#board {
+  background: blue;
+  padding: 0px 0px 20px 10px;
+  width: 800px;
+}
+.row {
+}
+.circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  display: inline-block;
+  margin: 20px 10px 0px 0px;
+  cursor: pointer;
+}
+
+.circle.red {
+  background-color: red;
+}
+
+.circle.yellow {
+  background-color: yellow;
+}
+
+.circle.empty {
+  background-color: black;
+}
