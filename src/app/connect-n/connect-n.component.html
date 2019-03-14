@@ -1,30 +1,80 @@
-<h2>Player {{ player }}, it's your turn!</h2>
-<button
-  mat-raised-button
-  color="primary"
-  (click)="showSettings = !showSettings"
->
-  Show Settings
-</button>
-<mat-card *ngIf="showSettings">
-  <form>
-    <mat-form-field>
-      <input matInput placeholder="Player 1 Name" />
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Player 2 Name" />
-    </mat-form-field>
-  </form>
-</mat-card>
-<div id="board">
-  <div *ngFor="let row of rows; let i = index" class="row">
-    <span
-      *ngFor="let col of row; let j = index"
-      class="circle"
-      [class.empty]="col === '-'"
-      [class.red]="col === 'X'"
-      [class.yellow]="col === 'O'"
-      (click)="click(i, j)"
-    ></span>
+<div id="game">
+  <h2 *ngIf="player">{{ player }}, it's your turn!</h2>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="showSettings = !showSettings"
+  >
+    Show Settings
+  </button>
+  <mat-card class="settings" *ngIf="showSettings">
+    <form>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Player 1 Name"
+          [value]="player1Name"
+          (keyup)="player1Name = player1NameInput.value"
+          #player1NameInput
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Player 2 Name"
+          [value]="player2Name"
+          (keyup)="player2Name = player2NameInput.value"
+          #player2NameInput
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Total Rows"
+          type="number"
+          min="1"
+          max="20"
+          [value]="totalRows"
+          (input)="totalRows = totalRowsInput.value"
+          #totalRowsInput
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Total Columns"
+          type="number"
+          min="1"
+          max="20"
+          [value]="totalColumns"
+          (input)="totalColumns = totalColumnsInput.value"
+          #totalColumnsInput
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Connect How Many?"
+          type="number"
+          min="1"
+          max="20"
+          [value]="inRow"
+          (input)="inRow = inRowInput.value"
+          #inRowInput
+        />
+      </mat-form-field>
+    </form>
+  </mat-card>
+  <div class="game-board">
+    <div *ngFor="let row of gameboard?.rows; let i = index" class="row">
+      <span
+        *ngFor="let col of row; let j = index"
+        class="circle"
+        [class.empty]="!col"
+        [class.red]="col === 'X'"
+        [class.yellow]="col === 'O'"
+        (click)="click(i, j)"
+      ></span>
+    </div>
   </div>
 </div>

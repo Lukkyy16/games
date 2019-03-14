@@ -1,22 +1,34 @@
-export class ConnectNGameboard {
-  player = 'O';
-  count = 0;
-  board: string[][] = [];
+export class ConnectNMove {
+  constructor(public player: 'X' | 'O', public columnIndex, public rowIndex) {}
+}
 
-  constructor(
-    public totalRows: number,
-    public totalColumns: number,
-    public inRow: number
-  ) {
-    for (let r = 0; r < this.totalRows; r++) {
-      this.board.push(new Array(this.totalColumns));
-    }
-    for (let r = 0; r < this.totalRows; r++) {
-      for (let c = 0; c < this.totalColumns; c++) {
-        this.board[r][c] = '-';
+export class ConnectNGameboard {
+  board: string[][] = [];
+  count = 0;
+  inRow = 4;
+  moves: ConnectNMove[] = [];
+  player: 'X' | 'O' = 'X';
+  totalColumns = 7;
+  totalRows = 6;
+
+  get blankRows(): string[][] {
+    const rows = [];
+    for (let i = 0; i < this.totalRows; i++) {
+      const cells = [];
+      for (let j = 0; j < this.totalColumns; j++) {
+        cells.push(null);
       }
+      rows.push(cells);
     }
-    console.dir(this.board);
+    return rows;
+  }
+
+  get rows(): string[][] {
+    const blankRows = this.blankRows;
+    return this.moves.reduce((acc, move) => {
+      acc[move.rowIndex][move.columnIndex] = move.player;
+      return acc;
+    }, blankRows);
   }
 
   check(r: number, c: number): boolean {
@@ -157,15 +169,22 @@ export class ConnectNGameboard {
     return this.board[r][c];
   }
 
+  move(rowIndex: number, columnIndex: number) {
+    this.moves.push(new ConnectNMove(this.player, rowIndex, columnIndex));
+    this.switchPlayer();
+  }
+
+  reduce(props: any): ConnectNGameboard {
+    const newState = Object.assign(new ConnectNGameboard(), this, props);
+    console.dir(newState);
+    return newState;
+  }
+
   replace(r: number, c: number) {
     this.board[r][c] = this.player;
   }
 
   switchPlayer() {
-    if (this.player === 'O') {
-      this.player = 'X';
-    } else {
-      this.player = 'O';
-    }
+    this.player = this.player === 'X' ? 'O' : 'X';
   }
 }

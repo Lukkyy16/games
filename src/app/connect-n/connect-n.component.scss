@@ -1,30 +1,36 @@
-#board {
-  background: blue;
-  padding: 0px 0px 20px 10px;
-  width: 800px;
-  margin: 20px auto;
-}
-form {
-  min-height: 100px;
-  margin: 50px;
-}
-.circle {
-  width: 100px;
-  height: 100px;
-  border-radius: 100%;
-  display: inline-block;
-  margin: 20px 10px 0px 0px;
-  cursor: pointer;
-}
-
-.circle.red {
-  background-color: red;
-}
-
-.circle.yellow {
-  background-color: yellow;
-}
-
-.circle.empty {
-  background-color: black;
+@import '../../common';
+#game {
+  mat-card.settings {
+    width: 400px;
+    form {
+      min-height: 100px;
+      width: 80%;
+      mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+  .game-board {
+    background: $primary-color;
+    padding: 0px 0px 20px 10px;
+    width: 800px;
+    margin: 20px auto;
+    .circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      display: inline-block;
+      margin: 20px 10px 0px 0px;
+      cursor: pointer;
+    }
+    .circle.red {
+      background-color: red;
+    }
+    .circle.yellow {
+      background-color: yellow;
+    }
+    .circle.empty {
+      background-color: black;
+    }
+  }
 }
