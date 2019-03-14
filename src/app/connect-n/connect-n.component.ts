@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ConnectNGameboard } from './connect-n.model';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 @Component({
   selector: 'games-connect-n',
@@ -12,6 +13,10 @@ export class ConnectNComponent implements OnInit {
   showSettings = true;
 
   constructor() {}
+
+  get check(): boolean {
+    return this.gameboard.check;
+  }
 
   get player(): string {
     return this.gameboard.player;
