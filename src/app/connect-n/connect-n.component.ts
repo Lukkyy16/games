@@ -60,7 +60,7 @@ export class ConnectNComponent implements OnInit {
       if ((occupied = '-')) {
         if (this.gameboard.rows[row][col] === null) {
           this.totalRows = count;
-          count--;
+          count -= 1;
           this.gameboard.move(row, col);
         }
       }
