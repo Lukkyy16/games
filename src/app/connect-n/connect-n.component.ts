@@ -14,6 +14,8 @@ export class ConnectNComponent implements OnInit {
   showSettings = true;
   count = 0;
   occupied = '';
+  amount = 0;
+  cuztomize = 0;
 
   constructor() {}
 
@@ -52,18 +54,16 @@ export class ConnectNComponent implements OnInit {
   ngOnInit() {}
 
   click(row: number, col: number) {
-    let count = 0;
-    let occupied = '';
-
-    for (let i = this.totalRows - 1; i > 0; i -= 1) {
-      occupied = this.gameboard.rows[row][col];
-      if (occupied === '-') {
-        if (this.gameboard.rows[row][col] === null) {
-          count -= 1;
-          this.totalRows = count;
-          this.gameboard.move(row, col);
-        }
+    for (let i = this.totalRows - 1; i >= 0; i -= 1) {
+      if (this.gameboard.rows[i][col] === null) {
+        this.count++;
       }
     }
+    this.count -= 1;
+    row = this.count;
+    if (this.gameboard.rows[row][col] === null) {
+      this.gameboard.move(row, col);
+    }
+    this.count = 0;
   }
 }
