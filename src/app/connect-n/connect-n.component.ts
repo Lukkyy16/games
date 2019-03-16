@@ -57,10 +57,10 @@ export class ConnectNComponent implements OnInit {
 
     for (let i = this.totalRows - 1; i > 0; i -= 1) {
       occupied = this.gameboard.rows[row][col];
-      if ((occupied = '-')) {
+      if (occupied === '-') {
         if (this.gameboard.rows[row][col] === null) {
-          this.totalRows = count;
           count -= 1;
+          this.totalRows = count;
           this.gameboard.move(row, col);
         }
       }
