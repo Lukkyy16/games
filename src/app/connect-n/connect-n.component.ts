@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ConnectNGameboard } from './connect-n.model';
+import { endTimeRange } from '@angular/core/src/profile/wtf_impl';
 
 @Component({
   selector: 'games-connect-n',
@@ -18,6 +19,10 @@ export class ConnectNComponent implements OnInit {
   cuztomize = 0;
 
   constructor() {}
+
+  get winner() {
+    return this.gameboard.gameOver ? this.player : null;
+  }
 
   get buttonText() {
     return this.showSettings ? 'Hide Settings' : 'Show Settings';
@@ -53,17 +58,21 @@ export class ConnectNComponent implements OnInit {
 
   ngOnInit() {}
 
+  clearBoard() {
+    this.gameboard.clearBoard();
+  }
+
   click(row: number, col: number) {
-    for (let i = this.totalRows - 1; i >= 0; i -= 1) {
+    let count = 0;
+    for (let i = this.totalRows - 1; i > 0; i -= 1) {
       if (this.gameboard.rows[i][col] === null) {
-        this.count++;
+        count++;
       }
     }
-    this.count -= 1;
-    row = this.count;
+    row = count;
     if (this.gameboard.rows[row][col] === null) {
       this.gameboard.move(row, col);
     }
-    this.count = 0;
+    count = 0;
   }
 }

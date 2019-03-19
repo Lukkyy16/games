@@ -1,5 +1,12 @@
 @import '../../common';
 #game {
+  .message {
+    font-size: 32px;
+    margin: 10px auto;
+  }
+  button.mat-raised-button {
+    margin-right: 10px;
+  }
   mat-card.settings {
     width: 400px;
     form {

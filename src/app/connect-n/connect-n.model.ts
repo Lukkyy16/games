@@ -23,18 +23,25 @@ export class ConnectNGameboard {
     return rows;
   }
 
+  get gameOver(): boolean {
+    if (this.lastMove) {
+      const r = this.lastMove ? this.lastMove.rowIndex : 0;
+      const c = this.lastMove ? this.lastMove.columnIndex : 0;
+      return this.checkH(r, c) || this.checkV(r, c) || this.checkD(r, c);
+    }
+    return false;
+  }
+
+  get lastMove(): ConnectNMove {
+    return this.moves.length > 0 ? this.moves[this.moves.length - 1] : null;
+  }
+
   get rows(): string[][] {
     const blankRows = this.blankRows;
     return this.moves.reduce((acc, move) => {
       acc[move.rowIndex][move.columnIndex] = move.player;
       return acc;
     }, blankRows);
-  }
-
-  check(r: number, c: number): boolean {
-    return this.board[r][c] === '-'
-      ? false
-      : this.checkH(r, c) || this.checkV(r, c) || this.checkD(r, c);
   }
 
   checkD(r: number, c: number): boolean {
@@ -52,12 +59,16 @@ export class ConnectNGameboard {
     return this.countUp(r, c) + this.countDown(r, c) >= this.inRow - 1;
   }
 
+  clearBoard() {
+    this.moves = [];
+  }
+
   countDown(r: number, c: number): number {
     let count = 0;
     let i = r;
 
     while (i < this.totalRows - 1) {
-      if (this.board[i + 1][c] !== this.board[r][c]) {
+      if (this.rows[i + 1][c] !== this.rows[r][c]) {
         break;
       }
       count++;
@@ -70,7 +81,7 @@ export class ConnectNGameboard {
     let count = 0;
     let i = c;
     while (i > 0) {
-      if (this.board[r][i - 1] !== this.board[r][c]) {
+      if (this.rows[r][i - 1] !== this.rows[r][c]) {
         break;
       }
       count++;
@@ -83,7 +94,8 @@ export class ConnectNGameboard {
     let count = 0;
     let i = c;
     while (i < this.totalColumns - 1) {
-      if (this.board[r][i + 1] !== this.board[r][c]) {
+      // console.log(this.rows[r][i + 1], this.rows[r][c]);
+      if (this.rows[r][i + 1] !== this.rows[r][c]) {
         break;
       }
       count++;
@@ -96,7 +108,7 @@ export class ConnectNGameboard {
     let count = 0;
     let i = r;
     while (i > 0) {
-      if (this.board[i - 1][c] !== this.board[r][c]) {
+      if (this.rows[i - 1][c] !== this.rows[r][c]) {
         break;
       }
       count++;
@@ -110,7 +122,7 @@ export class ConnectNGameboard {
     let i = r;
     let j = c;
     while (i < this.totalRows - 1 && j < this.totalColumns - 1) {
-      if (this.board[i + 1][j + 1] !== this.board[r][c]) {
+      if (this.rows[i + 1][j + 1] !== this.rows[r][c]) {
         break;
       }
       i++;
@@ -125,7 +137,7 @@ export class ConnectNGameboard {
     let i = r;
     let j = c;
     while (i < this.totalRows - 1 && j > 0) {
-      if (this.board[i + 1][j - 1] !== this.board[r][c]) {
+      if (this.rows[i + 1][j - 1] !== this.rows[r][c]) {
         break;
       }
       j -= 1;
@@ -140,7 +152,7 @@ export class ConnectNGameboard {
     let i = r;
     let j = c;
     while (i > 0 && j < this.totalColumns - 1) {
-      if (this.board[i - 1][j + 1] !== this.board[r][c]) {
+      if (this.rows[i - 1][j + 1] !== this.rows[r][c]) {
         break;
       }
       i -= 1;
@@ -155,7 +167,7 @@ export class ConnectNGameboard {
     let i = r;
     let j = c;
     while (i > 0 && j > 0) {
-      if (this.board[i - 1][j - 1] !== this.board[r][c]) {
+      if (this.rows[i - 1][j - 1] !== this.rows[r][c]) {
         break;
       }
       i -= 1;
@@ -166,12 +178,16 @@ export class ConnectNGameboard {
   }
 
   getIndex(r: number, c: number) {
-    return this.board[r][c];
+    return this.rows[r][c];
   }
 
   move(rowIndex: number, columnIndex: number) {
-    this.moves.push(new ConnectNMove(this.player, rowIndex, columnIndex));
-    this.switchPlayer();
+    if (!this.gameOver) {
+      this.moves.push(new ConnectNMove(this.player, rowIndex, columnIndex));
+    }
+    if (!this.gameOver) {
+      this.switchPlayer();
+    }
   }
 
   reduce(props: any): ConnectNGameboard {
@@ -181,7 +197,7 @@ export class ConnectNGameboard {
   }
 
   replace(r: number, c: number) {
-    this.board[r][c] = this.player;
+    this.rows[r][c] = this.player;
   }
 
   switchPlayer() {

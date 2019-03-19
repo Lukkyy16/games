@@ -1,5 +1,9 @@
 <div id="game">
-  <h2 *ngIf="player">{{ player }}, it's your turn!</h2>
+  <span class="message" *ngIf="player && !winner"
+    >{{ player }}, it's your turn!</span
+  >
+  <span class="message" *ngIf="winner">{{ winner }}, you win!</span>
+  <br />
   <button
     mat-raised-button
     color="primary"
@@ -7,7 +11,9 @@
   >
     {{ buttonText }}
   </button>
-
+  <button mat-raised-button color="primary" (click)="clearBoard()">
+    Clear Board
+  </button>
   <mat-card class="settings" *ngIf="showSettings">
     <form>
       <mat-form-field>
