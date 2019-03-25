@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ConnectNGameboard } from './connect-n.model';
-import { endTimeRange } from '@angular/core/src/profile/wtf_impl';
 
 @Component({
   selector: 'games-connect-n',
@@ -9,7 +8,7 @@ import { endTimeRange } from '@angular/core/src/profile/wtf_impl';
   styleUrls: ['./connect-n.component.scss']
 })
 export class ConnectNComponent implements OnInit {
-  gameboard = new ConnectNGameboard();
+  gameboard = new ConnectNGameboard(); //variables
   player1Name = '';
   player2Name = '';
   showSettings = true;
@@ -17,62 +16,120 @@ export class ConnectNComponent implements OnInit {
   occupied = '';
   amount = 0;
   cuztomize = 0;
+  errorMessage = '';
 
   constructor() {}
 
-  get winner() {
+  get boardWidth() { //creates board width based on amount of columns entered by the user
+    return this.totalColumns * 90;
+  }
+
+  get boardHeight() { //creates board height based on amount of rows entered by the user
+    return this.totalRows * 90;
+  }
+
+  get winner() { //figures out if someone won or not
     return this.gameboard.gameOver ? this.player : null;
   }
 
-  get buttonText() {
+  get buttonText() { //determines whether show or hides setting needs to be displayed for the button
     return this.showSettings ? 'Hide Settings' : 'Show Settings';
   }
 
-  set inRow(value: number) {
-    this.gameboard = this.gameboard.reduce({ inRow: value });
+  set inRow(value: number) { //sets the inrow variable 
+    if (value < 8) { //makes sure its less than 8
+      if (value > 2) { //makes sure its greater than 2
+        this.gameboard = this.gameboard.reduce({ inRow: value });
+      }
+      else {
+        this.flashErrorMessage('Make sure the connect how many is greater than 2'); //flashes error if they entered a too small number
+      }
+    }
+    else {
+      this.flashErrorMessage('Make sure the connect how many is less than 8'); //flashes error if they entered a number too high
+    }
   }
 
-  get inRow() {
+  get inRow() { //returns the inRow value to be used by the other values
     return this.gameboard.inRow;
   }
 
-  get player(): string {
+  get player(): string { //gets the x to equal player 1 or 2
     return this.gameboard.player === 'X' ? this.player1Name : this.player2Name;
   }
 
-  set totalColumns(value: number) {
-    this.gameboard = this.gameboard.reduce({ totalColumns: value });
+  set totalColumns(value: number) { //sets the total columns to a value entered by a user
+    if (value < 10) { //makes sure the value is less than 10
+      if (value > 3) { //makes sure the value is greater than 3
+        this.gameboard = this.gameboard.reduce({ totalColumns: value });
+      }
+      else {
+        this.flashErrorMessage('Make sure the total columns is greater than 3'); //displays error message if smaller than 3
+      }
+    }
+    else {
+      this.flashErrorMessage('Make sure the total columns is less than 10'); //displays error messgae if greaterthan 10
+    }
   }
 
-  get totalColumns() {
+  get totalColumns() { //returns the totalColumn value so the rest of the code can use it
     return this.gameboard.totalColumns;
   }
 
-  set totalRows(value: number) {
-    this.gameboard = this.gameboard.reduce({ totalRows: value });
+  set totalRows(value: number) { //sets total rows to the value entered by the user
+    if (value < 10) { //makes sure the value is less than 10
+      if (value > 3) { //makes sure the value is less than 3
+        this.gameboard = this.gameboard.reduce({ totalRows: value });
+      }
+      else {
+        this.flashErrorMessage('Make sure the total rows is greater than 3'); //displays error message if lower than 3
+      }
+    }
+    else {
+      this.flashErrorMessage('Make sure the total rows is less than 10'); //displays error message if greater than 10
+    }
   }
 
-  get totalRows() {
+  get totalRows() { //returns the totalRows value
     return this.gameboard.totalRows;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  clearBoard() {
+  clearBoard() { //returns the clear board value to be used else where
     this.gameboard.clearBoard();
   }
 
-  click(row: number, col: number) {
+  click(row: number, col: number) { //anytime someone clicks a circle this runs
     let count = 0;
-    for (let i = this.totalRows - 1; i > 0; i -= 1) {
-      if (this.gameboard.rows[i][col] === null) {
-        count++;
+    if (this.player1Name !== '' && this.player2Name !== '') { //makes sure the names are entered
+      for (let i = this.totalRows - 1; i > 0; i -= 1) { //loops through and places the chip at the lowest possible spot
+        if (this.gameboard.rows[i][col] === null) { //if the spot is empty adds one to count
+          count++;
+        }
       }
+      row = count; //makes row equal the lowest possible row
+      if (this.gameboard.rows[row][col] === null) { //makes sure the column isnt full
+        this.gameboard.move(row, col);
+      }
+      count = 0;
+    } else {
+      this.flashErrorMessage('Please enter player names before moving!'); //flashes error if names arent entered
     }
-    row = count;
-    if (this.gameboard.rows[row][col] === null) {
-      this.gameboard.move(row, col);
-    }
-    count = 0;
+  }
+
+  flashErrorMessage(message: string) { //creates the error message and its details
+    this.errorMessage = message;
+    setTimeout(() => {
+      this.errorMessage = '';
+    }, 3000);
+  }
+
+  resetTheSettings() { //creates the reset board
+    this.gameboard.resetSettings();
+  }
+
+  undoLastTurn() { //creates the undolasturn
+    this.gameboard.undoLastTurn();
   }
 }

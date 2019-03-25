@@ -1,13 +1,35 @@
+@import '~@angular/material/_theming';
 @import '../../common';
 #game {
-  .message {
-    font-size: 32px;
-    margin: 10px auto;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+  padding-top: 40px;
+  .actions {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    button.mat-raised-button {
+      margin-right: 10px;
+    }
   }
-  button.mat-raised-button {
-    margin-right: 10px;
+  .messages {
+    color: white;
+    position: absolute;
+    top: 15px;
+    right: 250px;
+    .message {
+      font-size: 32px;
+      margin: 10px auto;
+    }
   }
   mat-card.settings {
+    background-color: grey;
+    color: #fff;
+    height: 400px;
+    margin-top: 30px;
+    margin-left: 10px;
     width: 400px;
     form {
       min-height: 100px;
@@ -18,13 +40,19 @@
     }
   }
   .game-board {
+    @include mat-elevation(16);
+    border-radius: 10px;
     background: $primary-color;
     padding: 0px 0px 20px 10px;
-    width: 800px;
-    margin: 20px auto;
+    margin: 10px auto;
+    .row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
     .circle {
-      width: 100px;
-      height: 100px;
+      width: 71px;
+      height: 71px;
       border-radius: 100%;
       display: inline-block;
       margin: 20px 10px 0px 0px;
@@ -39,5 +67,11 @@
     .circle.empty {
       background-color: black;
     }
+  }
+  .error-message {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: red;
   }
 }
