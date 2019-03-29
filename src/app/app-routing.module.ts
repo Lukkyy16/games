@@ -13,10 +13,6 @@ const routes: Routes = [
       {
         path: 'connect-n',
         loadChildren: './connect-n/connect-n.module#ConnectNModule'
-      },
-      {
-        path: 'eight-ball',
-        loadChildren: './eight-ball/eight-ball.module#EightBallModule'
       }
     ]
   }

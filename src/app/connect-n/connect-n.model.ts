@@ -36,13 +36,21 @@ export class ConnectNGameboard {
     return this.moves.length > 0 ? this.moves[this.moves.length - 1] : null;
   }
 
-  get rows(): string[][] { 
+  get rows(): string[][] { //documents all moves made
     const blankRows = this.blankRows;
     return this.moves.reduce((acc, move) => {
       acc[move.rowIndex][move.columnIndex] = move.player;
       return acc;
     }, blankRows);
   }
+
+  get totalMoves(): number { //gets total moves made
+    return this.moves.length;
+  }
+
+  /*hovering(c: number) {
+    return this.rows[c];
+  }*/
 
   checkD(r: number, c: number): boolean { //constantly checks diagonal to see if someone won
     return (
@@ -191,7 +199,7 @@ export class ConnectNGameboard {
 
   reduce(props: any): ConnectNGameboard { //replicates the board and makes sure the move is valid and if it is it applies it to the real board
     const newState = Object.assign(new ConnectNGameboard(), this, props);
-    console.dir(newState);
+    //console.dir(newState);
     return newState;
   }
 

@@ -14,9 +14,9 @@ export class ConnectNComponent implements OnInit {
   showSettings = true;
   count = 0;
   occupied = '';
-  amount = 0;
   cuztomize = 0;
   errorMessage = '';
+  playerError = 0;
 
   constructor() {}
 
@@ -36,6 +36,10 @@ export class ConnectNComponent implements OnInit {
     return this.showSettings ? 'Hide Settings' : 'Show Settings';
   }
 
+  /*hover() {
+    return this.gameboard.hovering;
+  }*/
+
   set inRow(value: number) { //sets the inrow variable 
     if (value < 8) { //makes sure its less than 8
       if (value > 2) { //makes sure its greater than 2
@@ -54,8 +58,17 @@ export class ConnectNComponent implements OnInit {
     return this.gameboard.inRow;
   }
 
-  get player(): string { //gets the x to equal player 1 or 2
-    return this.gameboard.player === 'X' ? this.player1Name : this.player2Name;
+  get player(): string { //gets the x to equal player 1 or 
+      return this.gameboard.player === 'X' ? this.player1Name : this.player2Name;
+  }
+
+  get tie() { //checks to see if all spots are taken
+    const maxMoves = this.totalColumns * this.totalRows;
+    //console.log(maxMoves);
+    if (this.gameboard.totalMoves === maxMoves) {
+      return true;
+    }
+    return false;
   }
 
   set totalColumns(value: number) { //sets the total columns to a value entered by a user
