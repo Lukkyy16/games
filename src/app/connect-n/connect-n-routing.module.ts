@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ConnectNComponent } from './connect-n.component';

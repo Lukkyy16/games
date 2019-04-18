@@ -1,3 +1,5 @@
+import { IfStmt } from '@angular/compiler';
+
 export class ConnectNMove {
   constructor(public player: 'X' | 'O', public rowIndex, public columnIndex) { }
 }
@@ -48,9 +50,56 @@ export class ConnectNGameboard {
     return this.moves.length;
   }
 
-  /*hovering(c: number) {
-    return this.rows[c];
-  }*/
+  get winScenario(): 'HORIZONTAL' | 'VERTICAL' | 'DIAGONAL_RIGHT' | 'DIAGONAL_LEFT' {
+    if (!this.gameOver) {
+      return null;
+    } 
+    else {
+      if (this.lastMove) {
+        const r = this.lastMove ? this.lastMove.rowIndex : 0; //rows
+        const c = this.lastMove ? this.lastMove.columnIndex : 0; 
+        if(this.countLeft(r, c)) {
+          return 'HORIZONTAL';
+        }
+        if(this.countRight(r, c)) {
+          return 'HORIZONTAL';
+        }
+        if(this.countUp(r, c)) {
+          return 'VERTICAL';
+        }
+        if(this.countDown(r, c)) {
+          return 'VERTICAL'
+        }
+        if(this.countUpRight(r, c)) {
+          return 'DIAGONAL_RIGHT';
+        }
+        if(this.countDownRight(r, c)) {
+          return 'DIAGONAL_RIGHT';
+        }
+        if(this.countUpLeft(r, c)) {
+          return 'DIAGONAL_LEFT';
+        }
+        if(this.countDownLeft(r, c)) {
+          return 'DIAGONAL_LEFT';
+        }
+      }
+    }
+  }
+
+  get winningMoves(): ConnectNMove[] {
+    switch (this.winScenario) {
+      case 'HORIZONTAL':
+        return [this.lastMove];
+      case 'VERTICAL':
+        return [this.lastMove];
+      case 'DIAGONAL_RIGHT':
+        return [this.lastMove];
+      case 'DIAGONAL_LEFT':
+        return [this.lastMove];
+      default:
+        return null;
+    }
+  }
 
   checkD(r: number, c: number): boolean { //constantly checks diagonal to see if someone won
     return (
@@ -79,6 +128,10 @@ export class ConnectNGameboard {
       if (this.rows[i + 1][c] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countDown = [i + 1][c];
+        console.log(countDown);
+      }*/
       count++;
       i++;
     }
@@ -92,6 +145,9 @@ export class ConnectNGameboard {
       if (this.rows[r][i - 1] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countLeft = [r][i - 1];
+      }*/
       count++;
       i -= 1;
     }
@@ -105,6 +161,9 @@ export class ConnectNGameboard {
       if (this.rows[r][i + 1] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countRight = [r][i + 1];
+      }*/
       count++;
       i++;
     }
@@ -118,6 +177,9 @@ export class ConnectNGameboard {
       if (this.rows[i - 1][c] !== this.rows[r][c]) { //loops upward moves
         break;
       }
+      /*if (this.gameOver) {
+        const countUp = [i - 1][c];
+      }*/  
       count++;
       i -= 1;
     }
@@ -132,6 +194,9 @@ export class ConnectNGameboard {
       if (this.rows[i + 1][j + 1] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countDownRight = [i + 1][j + 1];
+      }*/ 
       i++;
       j++;
       count++;
@@ -147,6 +212,9 @@ export class ConnectNGameboard {
       if (this.rows[i + 1][j - 1] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countDownLeft = [i + 1][j - 1];
+      }*/
       j -= 1;
       i++;
       count++;
@@ -162,6 +230,9 @@ export class ConnectNGameboard {
       if (this.rows[i - 1][j + 1] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countUpRight = [i - 1][j + 1];
+      }*/
       i -= 1;
       j++;
       count++;
@@ -177,6 +248,10 @@ export class ConnectNGameboard {
       if (this.rows[i - 1][j - 1] !== this.rows[r][c]) {
         break;
       }
+      /*if (this.gameOver) {
+        const countUpLeft = [i - 1][j - 1];
+        console.log(countUpLeft);
+      }*/
       i -= 1;
       j -= 1;
       count++;
@@ -218,7 +293,10 @@ export class ConnectNGameboard {
   }
 
   undoLastTurn() { //creates logic for the undo last turn button
-    this.moves = this.moves.filter((x, i) => i !== this.moves.length - 1);
     this.switchPlayer();
+    if (this.gameOver) {
+      this.switchPlayer();
+    }
+    this.moves = this.moves.filter((x, i) => i !== this.moves.length - 1);
   }
 }

@@ -8,7 +8,7 @@
   padding-top: 40px;
   .actions {
     position: absolute;
-    top: 20px;
+    top: 90px;
     left: 20px;
     button.mat-raised-button {
       margin-right: 10px;
@@ -17,18 +17,18 @@
   .messages {
     color: white;
     position: absolute;
-    top: 15px;
-    right: 390px;
+    top: 45px;
+    right: 900px;
     .message {
       font-size: 32px;
       margin: 10px auto;
     }
   }
-    mat-card.settings {
+  mat-card.settings {
     background-color: grey;
     color: #fff;
-    height: 400px;
-    margin-top: 30px;
+    height: 360px;
+    margin-top: 60px;
     margin-left: 10px;
     width: 400px;
     form {
@@ -45,14 +45,22 @@
     background: $primary-color;
     padding: 0px 0px 20px 10px;
     margin: 10px auto;
+    position: absolute;
+    right: 50px;
+    .hover-icon {
+      @include mat-elevation(16);
+      position: absolute;
+      top: -100px;
+      left: 12px;
+    }
     .row {
       display: flex;
       justify-content: space-around;
       align-items: center;
     }
     .circle {
-      width: 71px;
-      height: 71px;
+      width: 65px;
+      height: 65px;
       border-radius: 100%;
       display: inline-block;
       margin: 20px 10px 0px 0px;
@@ -66,6 +74,9 @@
     }
     .circle.empty {
       background-color: black;
+    }
+    .circle.blinking {
+      
     }
   }
   .error-message {

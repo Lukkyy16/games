@@ -13,6 +13,10 @@ const routes: Routes = [
       {
         path: 'connect-n',
         loadChildren: './connect-n/connect-n.module#ConnectNModule'
+      },
+      {
+        path: 'yahtzee',
+        loadChildren: './yahtzee/yahtzee.module#YahtzeeModule'
       }
     ]
   }
@@ -22,4 +26,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

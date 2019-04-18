@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 
 import { ConnectNGameboard } from './connect-n.model';
 
@@ -8,6 +8,7 @@ import { ConnectNGameboard } from './connect-n.model';
   styleUrls: ['./connect-n.component.scss']
 })
 export class ConnectNComponent implements OnInit {
+  @ViewChild('board') board: ElementRef;
   gameboard = new ConnectNGameboard(); //variables
   player1Name = '';
   player2Name = '';
@@ -16,16 +17,17 @@ export class ConnectNComponent implements OnInit {
   occupied = '';
   cuztomize = 0;
   errorMessage = '';
+  hoverLeft = 0;
   playerError = 0;
 
-  constructor() {}
+  constructor() { }
 
   get boardWidth() { //creates board width based on amount of columns entered by the user
-    return this.totalColumns * 90;
+    return this.totalColumns * 80;
   }
 
   get boardHeight() { //creates board height based on amount of rows entered by the user
-    return this.totalRows * 90;
+    return this.totalRows * 85;
   }
 
   get winner() { //figures out if someone won or not
@@ -36,9 +38,17 @@ export class ConnectNComponent implements OnInit {
     return this.showSettings ? 'Hide Settings' : 'Show Settings';
   }
 
-  /*hover() {
-    return this.gameboard.hovering;
-  }*/
+  get gameboardStart(): number { //gets starting board pixels
+    return this.board.nativeElement.offsetLeft;
+  }
+
+  get gameboardEnd(): number { //gets the end length of the board
+    return this.board.nativeElement.offsetLeft + this.board.nativeElement.clientWidth;
+  }
+
+  get gameboardWidth(): number { //gets the wifth of the gameboard
+    return this.board.nativeElement.clientWidth;
+  }
 
   set inRow(value: number) { //sets the inrow variable 
     if (value < 8) { //makes sure its less than 8
@@ -59,12 +69,11 @@ export class ConnectNComponent implements OnInit {
   }
 
   get player(): string { //gets the x to equal player 1 or 
-      return this.gameboard.player === 'X' ? this.player1Name : this.player2Name;
+    return this.gameboard.player === 'X' ? this.player1Name : this.player2Name;
   }
 
   get tie() { //checks to see if all spots are taken
     const maxMoves = this.totalColumns * this.totalRows;
-    //console.log(maxMoves);
     if (this.gameboard.totalMoves === maxMoves) {
       return true;
     }
@@ -107,7 +116,8 @@ export class ConnectNComponent implements OnInit {
     return this.gameboard.totalRows;
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   clearBoard() { //returns the clear board value to be used else where
     this.gameboard.clearBoard();
@@ -136,6 +146,18 @@ export class ConnectNComponent implements OnInit {
     setTimeout(() => {
       this.errorMessage = '';
     }, 3000);
+  }
+
+  @HostListener('document:mousemove', ['$event']) //listening to mouse moves and following where the mouse is with board limits
+  onMouseMove(e) {
+    this.hoverLeft = Math.min(Math.max(e.pageX - this.gameboardStart - 32.5, 0), this.gameboardWidth - 65);
+  }
+
+  isBlinking(rowIndex: number, columnIndex: number): boolean {
+    const winningMoves = this.gameboard.winningMoves;
+    return winningMoves ?
+      winningMoves.findIndex(x => x.rowIndex === rowIndex && x.columnIndex === columnIndex) !== -1
+      : false;
   }
 
   resetTheSettings() { //creates the reset board

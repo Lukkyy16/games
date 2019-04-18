@@ -24,8 +24,8 @@
         <mat-hint align="end">{{player1NameInput.value.length}} / 15</mat-hint>
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Player 2 Name" [value]="player2Name" maxLength="15" 
-        (keyup)="player2Name = player2NameInput.value" #player2NameInput />
+        <input matInput placeholder="Player 2 Name" [value]="player2Name" maxLength="15"
+          (keyup)="player2Name = player2NameInput.value" #player2NameInput />
         <mat-hint align="end">{{player2NameInput.value.length}} / 15</mat-hint>
       </mat-form-field>
       <mat-form-field>
@@ -45,10 +45,13 @@
       </button>
     </form>
   </mat-card>
-  <div class="game-board" [style.width.px]="boardWidth" [style.height.px]="boardHeight">
+  <div #board class="game-board" [style.width.px]="boardWidth" [style.height.px]="boardHeight">
+    <div class="hover-icon circle" [style.left.px]="hoverLeft" [class.red]="gameboard.player === 'X'"
+      [class.yellow]="gameboard.player === 'O'">
+    </div>
     <div *ngFor="let row of gameboard?.rows; let i = index" class="row">
       <span *ngFor="let col of row; let j = index" class="circle" [class.empty]="!col" [class.red]="col === 'X'"
-        [class.yellow]="col === 'O'" (click)="click(i, j)"></span>
+        [class.yellow]="col === 'O'" [class.blinking]="isBlinking(i, j)" (click)="click(i, j)"></span>
     </div>
   </div>
   <div class="error-message">{{ errorMessage }}</div>
