@@ -128,10 +128,8 @@ export class ConnectNGameboard {
       if (this.rows[i + 1][c] !== this.rows[r][c]) {
         break;
       }
-      /*if (this.gameOver) {
-        const countDown = [i + 1][c];
-        console.log(countDown);
-      }*/
+      //const countDown = this.rows[i + 1][c];
+      //console.log(countDown);
       count++;
       i++;
     }
