@@ -1,7 +1,7 @@
 import { IfStmt } from '@angular/compiler';
 
 export class ConnectNMove {
-  constructor(public player: 'X' | 'O', public rowIndex, public columnIndex) { }
+  constructor(public player: 'X' | 'O', public rowIndex, public columnIndex) {}
 }
 
 export class ConnectNGameboard {
@@ -13,7 +13,8 @@ export class ConnectNGameboard {
   totalColumns = 7;
   totalRows = 6;
 
-  get blankRows(): string[][] { //Creates a 2d board in the same space as the circles on the screen
+  get blankRows(): string[][] {
+    //Creates a 2d board in the same space as the circles on the screen
     const rows = [];
     for (let i = 0; i < this.totalRows; i++) {
       const cells = [];
@@ -25,7 +26,8 @@ export class ConnectNGameboard {
     return rows;
   }
 
-  get gameOver(): boolean { //Constantly checking if someone won based on the players previous move
+  get gameOver(): boolean {
+    //Constantly checking if someone won based on the players previous move
     if (this.lastMove) {
       const r = this.lastMove ? this.lastMove.rowIndex : 0; //rows
       const c = this.lastMove ? this.lastMove.columnIndex : 0; //columns
@@ -34,11 +36,13 @@ export class ConnectNGameboard {
     return false;
   }
 
-  get lastMove(): ConnectNMove { //documents the preivous move
+  get lastMove(): ConnectNMove {
+    //documents the preivous move
     return this.moves.length > 0 ? this.moves[this.moves.length - 1] : null;
   }
 
-  get rows(): string[][] { //documents all moves made
+  get rows(): string[][] {
+    //documents all moves made
     const blankRows = this.blankRows;
     return this.moves.reduce((acc, move) => {
       acc[move.rowIndex][move.columnIndex] = move.player;
@@ -46,41 +50,33 @@ export class ConnectNGameboard {
     }, blankRows);
   }
 
-  get totalMoves(): number { //gets total moves made
+  get totalMoves(): number {
+    //gets total moves made
     return this.moves.length;
   }
 
-  get winScenario(): 'HORIZONTAL' | 'VERTICAL' | 'DIAGONAL_RIGHT' | 'DIAGONAL_LEFT' {
+  get winScenario():
+    | 'HORIZONTAL'
+    | 'VERTICAL'
+    | 'DIAGONAL_DECLINE'
+    | 'DIAGONAL_INCLINE' {
     if (!this.gameOver) {
       return null;
-    } 
-    else {
+    } else {
       if (this.lastMove) {
-        const r = this.lastMove ? this.lastMove.rowIndex : 0; //rows
-        const c = this.lastMove ? this.lastMove.columnIndex : 0; 
-        if(this.countLeft(r, c)) {
+        const r = this.lastMove ? this.lastMove.rowIndex : 0; // rows
+        const c = this.lastMove ? this.lastMove.columnIndex : 0;
+        if (this.checkH(r, c)) {
           return 'HORIZONTAL';
         }
-        if(this.countRight(r, c)) {
-          return 'HORIZONTAL';
-        }
-        if(this.countUp(r, c)) {
+        if (this.checkV(r, c)) {
           return 'VERTICAL';
         }
-        if(this.countDown(r, c)) {
-          return 'VERTICAL'
+        if (this.checkDiagonalDecline(r, c)) {
+          return 'DIAGONAL_DECLINE';
         }
-        if(this.countUpRight(r, c)) {
-          return 'DIAGONAL_RIGHT';
-        }
-        if(this.countDownRight(r, c)) {
-          return 'DIAGONAL_RIGHT';
-        }
-        if(this.countUpLeft(r, c)) {
-          return 'DIAGONAL_LEFT';
-        }
-        if(this.countDownLeft(r, c)) {
-          return 'DIAGONAL_LEFT';
+        if (this.checkDiagonalIncline(r, c)) {
+          return 'DIAGONAL_INCLINE';
         }
       }
     }
@@ -89,42 +85,67 @@ export class ConnectNGameboard {
   get winningMoves(): ConnectNMove[] {
     switch (this.winScenario) {
       case 'HORIZONTAL':
-        return [this.lastMove];
+        return this.findWinningMovesHorizontal(
+          this.countLeft(this.lastMove.rowIndex, this.lastMove.columnIndex),
+          this.countRight(this.lastMove.rowIndex, this.lastMove.columnIndex)
+        );
       case 'VERTICAL':
-        return [this.lastMove];
-      case 'DIAGONAL_RIGHT':
-        return [this.lastMove];
-      case 'DIAGONAL_LEFT':
-        return [this.lastMove];
+        return this.findWinningMovesVertical(
+          this.countUp(this.lastMove.rowIndex, this.lastMove.columnIndex),
+          this.countDown(this.lastMove.rowIndex, this.lastMove.columnIndex)
+        );
+      case 'DIAGONAL_DECLINE':
+        return this.findWinningMovesDiagonalDecline(
+          this.countUpLeft(this.lastMove.rowIndex, this.lastMove.columnIndex),
+          this.countDownRight(this.lastMove.rowIndex, this.lastMove.columnIndex)
+        );
+      case 'DIAGONAL_INCLINE':
+        return this.findWinningMovesDiagonalIncline(
+          this.countUpRight(this.lastMove.rowIndex, this.lastMove.columnIndex),
+          this.countDownLeft(this.lastMove.rowIndex, this.lastMove.columnIndex)
+        );
       default:
         return null;
     }
   }
 
-  checkD(r: number, c: number): boolean { //constantly checks diagonal to see if someone won
-    return (
-      this.countUpRight(r, c) + this.countDownLeft(r, c) >= this.inRow - 1 ||
-      this.countDownRight(r, c) + this.countUpLeft(r, c) >= this.inRow - 1
-    );
+  checkD(r: number, c: number): boolean {
+    // constantly checks diagonal to see if someone won
+    return this.checkDiagonalDecline(r, c) || this.checkDiagonalIncline(r, c);
   }
 
-  checkH(r: number, c: number): boolean { //checks horizontal to see if someone one
+  checkDiagonalDecline(r: number, c: number): boolean {
+    // constantly checks diagonal to see if someone won
+    return this.countDownRight(r, c) + this.countUpLeft(r, c) >= this.inRow - 1;
+  }
+
+  checkDiagonalIncline(r: number, c: number): boolean {
+    // constantly checks diagonal to see if someone won
+    return this.countUpRight(r, c) + this.countDownLeft(r, c) >= this.inRow - 1;
+  }
+
+  checkH(r: number, c: number): boolean {
+    // checks horizontal to see if someone one
     return this.countLeft(r, c) + this.countRight(r, c) >= this.inRow - 1;
   }
 
-  checkV(r: number, c: number): boolean { //checks vertical
+  checkV(r: number, c: number): boolean {
+    //checks vertical
     return this.countUp(r, c) + this.countDown(r, c) >= this.inRow - 1;
   }
 
-  clearBoard() { //WHen clear board button is clicked it resets the board
+  clearBoard() {
+    //WHen clear board button is clicked it resets the board
     this.moves = [];
   }
 
-  countDown(r: number, c: number): number { //counts downward
+  countDown(r: number, c: number): number {
+    //counts downward
     let count = 0;
     let i = r;
 
-    while (i < this.totalRows - 1) { //loops through all downward possibilities
+    while (i < this.totalRows - 1) {
+      //loops through all downward possibilities
       if (this.rows[i + 1][c] !== this.rows[r][c]) {
         break;
       }
@@ -136,10 +157,12 @@ export class ConnectNGameboard {
     return count;
   }
 
-  countLeft(r: number, c: number): number { //checks left 
+  countLeft(r: number, c: number): number {
+    // checks left
     let count = 0;
     let i = c;
-    while (i > 0) { //loops through any left winning conditions
+    while (i > 0) {
+      // loops through any left winning conditions
       if (this.rows[r][i - 1] !== this.rows[r][c]) {
         break;
       }
@@ -152,10 +175,12 @@ export class ConnectNGameboard {
     return count;
   }
 
-  countRight(r: number, c: number): number { //checks right 
+  countRight(r: number, c: number): number {
+    // checks right
     let count = 0;
     let i = c;
-    while (i < this.totalColumns - 1) { //loops through right moves
+    while (i < this.totalColumns - 1) {
+      // loops through right moves
       if (this.rows[r][i + 1] !== this.rows[r][c]) {
         break;
       }
@@ -168,33 +193,39 @@ export class ConnectNGameboard {
     return count;
   }
 
-  countUp(r: number, c: number): number { //checks upward 
+  countUp(r: number, c: number): number {
+    // checks upward
     let count = 0;
     let i = r;
     while (i > 0) {
-      if (this.rows[i - 1][c] !== this.rows[r][c]) { //loops upward moves
+      if (this.rows[i - 1][c] !== this.rows[r][c]) {
+        // loops upward moves
         break;
       }
       /*if (this.gameOver) {
         const countUp = [i - 1][c];
-      }*/  
+      }*/
+
       count++;
       i -= 1;
     }
     return count;
   }
 
-  countDownRight(r: number, c: number): number { //checks horizontal down right 
+  countDownRight(r: number, c: number): number {
+    // checks horizontal down right
     let count = 0;
     let i = r;
     let j = c;
-    while (i < this.totalRows - 1 && j < this.totalColumns - 1) { //loops through downright moves
+    while (i < this.totalRows - 1 && j < this.totalColumns - 1) {
+      // loops through downright moves
       if (this.rows[i + 1][j + 1] !== this.rows[r][c]) {
         break;
       }
       /*if (this.gameOver) {
         const countDownRight = [i + 1][j + 1];
-      }*/ 
+      }*/
+
       i++;
       j++;
       count++;
@@ -202,11 +233,13 @@ export class ConnectNGameboard {
     return count;
   }
 
-  countDownLeft(r: number, c: number): number { //checks horizontal down left 
+  countDownLeft(r: number, c: number): number {
+    // checks horizontal down left
     let count = 0;
     let i = r;
     let j = c;
-    while (i < this.totalRows - 1 && j > 0) { //loops through down left moves
+    while (i < this.totalRows - 1 && j > 0) {
+      // loops through down left moves
       if (this.rows[i + 1][j - 1] !== this.rows[r][c]) {
         break;
       }
@@ -220,11 +253,13 @@ export class ConnectNGameboard {
     return count;
   }
 
-  countUpRight(r: number, c: number): number { //checks up right horizontal win
+  countUpRight(r: number, c: number): number {
+    // checks up right horizontal win
     let count = 0;
     let i = r;
     let j = c;
-    while (i > 0 && j < this.totalColumns - 1) { //loops through up right moves
+    while (i > 0 && j < this.totalColumns - 1) {
+      // loops through up right moves
       if (this.rows[i - 1][j + 1] !== this.rows[r][c]) {
         break;
       }
@@ -238,11 +273,13 @@ export class ConnectNGameboard {
     return count;
   }
 
-  countUpLeft(r: number, c: number): number { //checks up left horizontal 
+  countUpLeft(r: number, c: number): number {
+    // checks up left horizontal
     let count = 0;
     let i = r;
     let j = c;
-    while (i > 0 && j > 0) { //loops through up left moves
+    while (i > 0 && j > 0) {
+      //loops through up left moves
       if (this.rows[i - 1][j - 1] !== this.rows[r][c]) {
         break;
       }
@@ -257,11 +294,122 @@ export class ConnectNGameboard {
     return count;
   }
 
-  getIndex(r: number, c: number) { //gets the index of the moves
+  findWinningMovesHorizontal(
+    totalLeft: number,
+    totalRight: number
+  ): ConnectNMove[] {
+    const moves = [this.lastMove];
+    for (let i = totalLeft; i > 0; i--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex,
+          this.lastMove.columnIndex - i
+        )
+      );
+      totalLeft--;
+    }
+    for (let j = totalRight; j > 0; j--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex,
+          this.lastMove.columnIndex + j
+        )
+      );
+      totalLeft--;
+    }
+    return moves;
+  }
+
+  findWinningMovesVertical(totalUp: number, totalDown: number): ConnectNMove[] {
+    const moves = [this.lastMove];
+    for (let i = totalUp; i > 0; i--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex - i,
+          this.lastMove.columnIndex
+        )
+      );
+      totalUp--;
+    }
+    for (let j = totalDown; j > 0; j--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex + j,
+          this.lastMove.columnIndex
+        )
+      );
+      totalDown--;
+    }
+    return moves;
+  }
+
+  findWinningMovesDiagonalDecline(
+    totalUp: number,
+    totalDown: number
+  ): ConnectNMove[] {
+    const moves = [this.lastMove];
+    for (let i = totalUp; i > 0; i--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex - i,
+          this.lastMove.columnIndex - i
+        )
+      );
+      totalUp--;
+    }
+    for (let j = totalDown; j > 0; j--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex + j,
+          this.lastMove.columnIndex + j
+        )
+      );
+      totalDown--;
+    }
+    return moves;
+  }
+
+  findWinningMovesDiagonalIncline(
+    totalUp: number,
+    totalDown: number
+  ): ConnectNMove[] {
+    const moves = [this.lastMove];
+    for (let i = totalUp; i > 0; i--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex - i,
+          this.lastMove.columnIndex + i
+        )
+      );
+      totalUp--;
+    }
+    for (let j = totalDown; j > 0; j--) {
+      moves.push(
+        new ConnectNMove(
+          this.lastMove.player,
+          this.lastMove.rowIndex + j,
+          this.lastMove.columnIndex - j
+        )
+      );
+      totalDown--;
+    }
+    return moves;
+  }
+
+  getIndex(r: number, c: number) {
+    // gets the index of the moves
     return this.rows[r][c];
   }
 
-  move(rowIndex: number, columnIndex: number) { //pushes the move to the correct position
+  move(rowIndex: number, columnIndex: number) {
+    // pushes the move to the correct position
     if (!this.gameOver) {
       this.moves.push(new ConnectNMove(this.player, rowIndex, columnIndex));
     }
@@ -270,27 +418,31 @@ export class ConnectNGameboard {
     }
   }
 
-  reduce(props: any): ConnectNGameboard { //replicates the board and makes sure the move is valid and if it is it applies it to the real board
+  reduce(props: any): ConnectNGameboard {
+    // replicates the board and makes sure the move is valid and if it is it applies it to the real board
     const newState = Object.assign(new ConnectNGameboard(), this, props);
-    //console.dir(newState);
     return newState;
   }
 
-  replace(r: number, c: number) { //replaces the move with the player so it knows who won
+  replace(r: number, c: number) {
+    // replaces the move with the player so it knows who won
     this.rows[r][c] = this.player;
   }
 
-  resetSettings() { //resets the settings
+  resetSettings() {
+    // resets the settings
     this.inRow = 4;
     this.totalRows = 6;
     this.totalColumns = 7;
   }
 
-  switchPlayer() { //switches the player when called
+  switchPlayer() {
+    // switches the player when called
     this.player = this.player === 'X' ? 'O' : 'X';
   }
 
-  undoLastTurn() { //creates logic for the undo last turn button
+  undoLastTurn() {
+    // creates logic for the undo last turn button
     this.switchPlayer();
     if (this.gameOver) {
       this.switchPlayer();

@@ -1,88 +1,118 @@
 @import '~@angular/material/_theming';
 @import '../../common';
+
 #game {
-  background-color: black;
-  display: flex;
-  justify-content: space-between;
-  align-items: top;
-  padding-top: 40px;
-  .actions {
-    position: absolute;
-    top: 90px;
-    left: 20px;
-    button.mat-raised-button {
-      margin-right: 10px;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    padding-top: 40px;
+
+    .actions {
+        position: absolute;
+        top: 90px;
+        left: 20px;
+
+        button.mat-raised-button {
+            margin-right: 10px;
+        }
     }
-  }
-  .messages {
-    color: white;
-    position: absolute;
-    top: 45px;
-    right: 900px;
-    .message {
-      font-size: 32px;
-      margin: 10px auto;
+
+    .messages {
+        color: white;
+        position: absolute;
+        top: 45px;
+        right: 900px;
+
+        .message {
+            font-size: 32px;
+            margin: 10px auto;
+        }
     }
-  }
-  mat-card.settings {
-    background-color: grey;
-    color: #fff;
-    height: 360px;
-    margin-top: 60px;
-    margin-left: 10px;
-    width: 400px;
-    form {
-      min-height: 100px;
-      width: 80%;
-      mat-form-field {
-        width: 100%;
-      }
+
+    mat-card.settings {
+        background-color: grey;
+        color: #fff;
+        height: 360px;
+        margin-top: 60px;
+        margin-left: 10px;
+        width: 400px;
+
+        form {
+            min-height: 100px;
+            width: 80%;
+
+            mat-form-field {
+                width: 100%;
+            }
+        }
     }
-  }
-  .game-board {
-    @include mat-elevation(16);
-    border-radius: 10px;
-    background: $primary-color;
-    padding: 0px 0px 20px 10px;
-    margin: 10px auto;
-    position: absolute;
-    right: 50px;
-    .hover-icon {
-      @include mat-elevation(16);
-      position: absolute;
-      top: -100px;
-      left: 12px;
+
+    .game-board {
+        @include mat-elevation(16);
+        border-radius: 10px;
+        background: $primary-color;
+        padding: 0px 0px 20px 10px;
+        margin: 10px auto;
+        position: absolute;
+        right: 50px;
+
+        .hover-icon {
+            @include mat-elevation(16);
+            position: absolute;
+            top: -100px;
+            left: 12px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 100%;
+            display: inline-block;
+            margin: 20px 10px 0px 0px;
+            cursor: pointer;
+        }
+
+        .circle.red {
+            background-color: red;
+        }
+
+        .circle.yellow {
+            background-color: yellow;
+        }
+
+        .circle.empty {
+            background-color: black;
+        }
+
+        .circle.blinking {
+            animation: blink-animation .5s steps(5, start) infinite;
+            -webkit-animation: blink-animation .5s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        @-webkit-keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
     }
-    .row {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+
+    .error-message {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        color: red;
     }
-    .circle {
-      width: 65px;
-      height: 65px;
-      border-radius: 100%;
-      display: inline-block;
-      margin: 20px 10px 0px 0px;
-      cursor: pointer;
-    }
-    .circle.red {
-      background-color: red;
-    }
-    .circle.yellow {
-      background-color: yellow;
-    }
-    .circle.empty {
-      background-color: black;
-    }
-    .circle.blinking {
-      
-    }
-  }
-  .error-message {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    color: red;
-  }
 }

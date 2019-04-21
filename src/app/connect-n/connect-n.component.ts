@@ -1,4 +1,10 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 
 import { ConnectNGameboard } from './connect-n.model';
 
@@ -20,59 +26,74 @@ export class ConnectNComponent implements OnInit {
   hoverLeft = 0;
   playerError = 0;
 
-  constructor() { }
+  constructor() {}
 
-  get boardWidth() { //creates board width based on amount of columns entered by the user
+  get boardWidth() {
+    //creates board width based on amount of columns entered by the user
     return this.totalColumns * 80;
   }
 
-  get boardHeight() { //creates board height based on amount of rows entered by the user
+  get boardHeight() {
+    //creates board height based on amount of rows entered by the user
     return this.totalRows * 85;
   }
 
-  get winner() { //figures out if someone won or not
+  get winner() {
+    //figures out if someone won or not
     return this.gameboard.gameOver ? this.player : null;
   }
 
-  get buttonText() { //determines whether show or hides setting needs to be displayed for the button
+  get buttonText() {
+    //determines whether show or hides setting needs to be displayed for the button
     return this.showSettings ? 'Hide Settings' : 'Show Settings';
   }
 
-  get gameboardStart(): number { //gets starting board pixels
+  get gameboardStart(): number {
+    //gets starting board pixels
     return this.board.nativeElement.offsetLeft;
   }
 
-  get gameboardEnd(): number { //gets the end length of the board
-    return this.board.nativeElement.offsetLeft + this.board.nativeElement.clientWidth;
+  get gameboardEnd(): number {
+    //gets the end length of the board
+    return (
+      this.board.nativeElement.offsetLeft + this.board.nativeElement.clientWidth
+    );
   }
 
-  get gameboardWidth(): number { //gets the wifth of the gameboard
+  get gameboardWidth(): number {
+    //gets the wifth of the gameboard
     return this.board.nativeElement.clientWidth;
   }
 
-  set inRow(value: number) { //sets the inrow variable 
-    if (value < 8) { //makes sure its less than 8
-      if (value > 2) { //makes sure its greater than 2
+  set inRow(value: number) {
+    //sets the inrow variable
+    if (value < 8) {
+      //makes sure its less than 8
+      if (value > 2) {
+        //makes sure its greater than 2
         this.gameboard = this.gameboard.reduce({ inRow: value });
+      } else {
+        this.flashErrorMessage(
+          'Make sure the connect how many is greater than 2'
+        ); //flashes error if they entered a too small number
       }
-      else {
-        this.flashErrorMessage('Make sure the connect how many is greater than 2'); //flashes error if they entered a too small number
-      }
-    }
-    else {
+    } else {
       this.flashErrorMessage('Make sure the connect how many is less than 8'); //flashes error if they entered a number too high
     }
   }
 
-  get inRow() { //returns the inRow value to be used by the other values
+  get inRow() {
+    //returns the inRow value to be used by the other values
     return this.gameboard.inRow;
   }
 
-  get player(): string { //gets the x to equal player 1 or 
+  get player(): string {
+    //gets the x to equal player 1 or
     return this.gameboard.player === 'X' ? this.player1Name : this.player2Name;
   }
 
-  get tie() { //checks to see if all spots are taken
+  get tie() {
+    //checks to see if all spots are taken
     const maxMoves = this.totalColumns * this.totalRows;
     if (this.gameboard.totalMoves === maxMoves) {
       return true;
@@ -80,59 +101,68 @@ export class ConnectNComponent implements OnInit {
     return false;
   }
 
-  set totalColumns(value: number) { //sets the total columns to a value entered by a user
-    if (value < 10) { //makes sure the value is less than 10
-      if (value > 3) { //makes sure the value is greater than 3
+  set totalColumns(value: number) {
+    //sets the total columns to a value entered by a user
+    if (value < 10) {
+      //makes sure the value is less than 10
+      if (value > 3) {
+        //makes sure the value is greater than 3
         this.gameboard = this.gameboard.reduce({ totalColumns: value });
-      }
-      else {
+      } else {
         this.flashErrorMessage('Make sure the total columns is greater than 3'); //displays error message if smaller than 3
       }
-    }
-    else {
+    } else {
       this.flashErrorMessage('Make sure the total columns is less than 10'); //displays error messgae if greaterthan 10
     }
   }
 
-  get totalColumns() { //returns the totalColumn value so the rest of the code can use it
+  get totalColumns() {
+    //returns the totalColumn value so the rest of the code can use it
     return this.gameboard.totalColumns;
   }
 
-  set totalRows(value: number) { //sets total rows to the value entered by the user
-    if (value < 10) { //makes sure the value is less than 10
-      if (value > 3) { //makes sure the value is less than 3
+  set totalRows(value: number) {
+    //sets total rows to the value entered by the user
+    if (value < 10) {
+      //makes sure the value is less than 10
+      if (value > 3) {
+        //makes sure the value is less than 3
         this.gameboard = this.gameboard.reduce({ totalRows: value });
-      }
-      else {
+      } else {
         this.flashErrorMessage('Make sure the total rows is greater than 3'); //displays error message if lower than 3
       }
-    }
-    else {
+    } else {
       this.flashErrorMessage('Make sure the total rows is less than 10'); //displays error message if greater than 10
     }
   }
 
-  get totalRows() { //returns the totalRows value
+  get totalRows() {
+    //returns the totalRows value
     return this.gameboard.totalRows;
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  clearBoard() { //returns the clear board value to be used else where
+  clearBoard() {
+    //returns the clear board value to be used else where
     this.gameboard.clearBoard();
   }
 
-  click(row: number, col: number) { //anytime someone clicks a circle this runs
+  click(row: number, col: number) {
+    //anytime someone clicks a circle this runs
     let count = 0;
-    if (this.player1Name !== '' && this.player2Name !== '') { //makes sure the names are entered
-      for (let i = this.totalRows - 1; i > 0; i -= 1) { //loops through and places the chip at the lowest possible spot
-        if (this.gameboard.rows[i][col] === null) { //if the spot is empty adds one to count
+    if (this.player1Name !== '' && this.player2Name !== '') {
+      //makes sure the names are entered
+      for (let i = this.totalRows - 1; i > 0; i -= 1) {
+        //loops through and places the chip at the lowest possible spot
+        if (this.gameboard.rows[i][col] === null) {
+          //if the spot is empty adds one to count
           count++;
         }
       }
       row = count; //makes row equal the lowest possible row
-      if (this.gameboard.rows[row][col] === null) { //makes sure the column isnt full
+      if (this.gameboard.rows[row][col] === null) {
+        //makes sure the column isnt full
         this.gameboard.move(row, col);
       }
       count = 0;
@@ -141,7 +171,8 @@ export class ConnectNComponent implements OnInit {
     }
   }
 
-  flashErrorMessage(message: string) { //creates the error message and its details
+  flashErrorMessage(message: string) {
+    //creates the error message and its details
     this.errorMessage = message;
     setTimeout(() => {
       this.errorMessage = '';
@@ -150,21 +181,28 @@ export class ConnectNComponent implements OnInit {
 
   @HostListener('document:mousemove', ['$event']) //listening to mouse moves and following where the mouse is with board limits
   onMouseMove(e) {
-    this.hoverLeft = Math.min(Math.max(e.pageX - this.gameboardStart - 32.5, 0), this.gameboardWidth - 65);
+    this.hoverLeft = Math.min(
+      Math.max(e.pageX - this.gameboardStart - 32.5, 0),
+      this.gameboardWidth - 65
+    );
   }
 
   isBlinking(rowIndex: number, columnIndex: number): boolean {
     const winningMoves = this.gameboard.winningMoves;
-    return winningMoves ?
-      winningMoves.findIndex(x => x.rowIndex === rowIndex && x.columnIndex === columnIndex) !== -1
+    return winningMoves
+      ? winningMoves.findIndex(
+          x => x.rowIndex === rowIndex && x.columnIndex === columnIndex
+        ) !== -1
       : false;
   }
 
-  resetTheSettings() { //creates the reset board
+  resetTheSettings() {
+    //creates the reset board
     this.gameboard.resetSettings();
   }
 
-  undoLastTurn() { //creates the undolasturn
+  undoLastTurn() {
+    //creates the undolasturn
     this.gameboard.undoLastTurn();
   }
 }
