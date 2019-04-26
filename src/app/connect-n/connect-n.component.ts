@@ -187,7 +187,7 @@ export class ConnectNComponent implements OnInit {
     );
   }
 
-  isBlinking(rowIndex: number, columnIndex: number): boolean {
+  isBlinking(rowIndex: number, columnIndex: number): boolean { //finds out whether the circles are blinking
     const winningMoves = this.gameboard.winningMoves;
     return winningMoves
       ? winningMoves.findIndex(
@@ -199,6 +199,10 @@ export class ConnectNComponent implements OnInit {
   resetTheSettings() {
     //creates the reset board
     this.gameboard.resetSettings();
+  }
+
+  chipSound() {
+
   }
 
   undoLastTurn() {
