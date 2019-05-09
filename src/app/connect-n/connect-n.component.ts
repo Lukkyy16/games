@@ -25,6 +25,7 @@ export class ConnectNComponent implements OnInit {
   errorMessage = '';
   hoverLeft = 0;
   playerError = 0;
+  isSound = true;
 
   constructor() {}
 
@@ -40,6 +41,12 @@ export class ConnectNComponent implements OnInit {
 
   get winner() {
     //figures out if someone won or not
+    if (this.gameboard.gameOver) {
+      if (this.isSound) {
+        this.audioWinner();
+        this.isSound = false;
+      }
+    }
     return this.gameboard.gameOver ? this.player : null;
   }
 
@@ -148,6 +155,16 @@ export class ConnectNComponent implements OnInit {
     this.gameboard.clearBoard();
   }
 
+  audioWinner() {
+    const audio = new Audio('assets/jingle.mp3');
+    audio.play();
+  }
+
+  chipSound() {
+    const chipDrop = new Audio('assets/chip drop.mp3');
+    chipDrop.play();
+  }
+
   click(row: number, col: number) {
     //anytime someone clicks a circle this runs
     let count = 0;
@@ -158,6 +175,9 @@ export class ConnectNComponent implements OnInit {
         if (this.gameboard.rows[i][col] === null) {
           //if the spot is empty adds one to count
           count++;
+          if (!this.gameboard.gameOver) {
+            this.chipSound();
+          }
         }
       }
       row = count; //makes row equal the lowest possible row
@@ -201,12 +221,11 @@ export class ConnectNComponent implements OnInit {
     this.gameboard.resetSettings();
   }
 
-  chipSound() {
-
-  }
-
   undoLastTurn() {
     //creates the undolasturn
+    if (!this.isSound) {
+      this.isSound = true;
+    }
     this.gameboard.undoLastTurn();
   }
 }

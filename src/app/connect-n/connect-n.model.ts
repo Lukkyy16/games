@@ -12,6 +12,7 @@ export class ConnectNGameboard {
   player: 'X' | 'O' = 'X';
   totalColumns = 7;
   totalRows = 6;
+  redo = 0;
 
   get blankRows(): string[][] {
     //Creates a 2d board in the same space as the circles on the screen
